@@ -15,7 +15,6 @@ export default class AuthenticationService {
    * @param email the email of the new user
    * @param password the password of the new user
    */
-  @inject()
   async register(fullName: string, email: string, password: string): Promise<void> {
     const user = await this.userRepository.create(fullName, email, password)
     await this.ctx.auth.use('web').login(user)
@@ -32,6 +31,10 @@ export default class AuthenticationService {
       await this.ctx.auth.use('web').login(user)
       return this.ctx.response.redirect().toRoute('home.render')
     }
+    this.ctx.session.flashErrors({
+      email: 'Invalid email or password',
+      password: 'Invalid email or password',
+    })
     return this.ctx.response.redirect().toRoute('login.render')
   }
 
