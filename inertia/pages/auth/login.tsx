@@ -57,6 +57,12 @@ export default function LoginScreen() {
             {form.processing ? 'Loading' : 'Sign in'}
           </Button>
         </form>
+        <div className="flex justify-center gap-1 text-center">
+          <span className="text-sm text-tertiary">Don' have an account?</span>
+          <Button href="/register" color="link-color">
+            Sign up
+          </Button>
+        </div>
       </AuthLayout>
     </>
   )

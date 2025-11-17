@@ -66,6 +66,12 @@ export default function RegisterScreen() {
             {form.processing ? 'Loading' : 'Get started'}
           </Button>
         </form>
+        <div className="flex justify-center gap-1 text-center">
+          <span className="text-sm text-tertiary">Already have an account?</span>
+          <Button href="/login" color="link-color">
+            Log in
+          </Button>
+        </div>
       </AuthLayout>
     </>
   )
