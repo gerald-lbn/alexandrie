@@ -30,6 +30,22 @@ export default class AuthenticationService {
     const user = await this.userRepository.verifyCredentials(email, password)
     if (user) {
       await this.ctx.auth.use('web').login(user)
+      return this.ctx.response.redirect().toRoute('home.render')
+    }
+    return this.ctx.response.redirect().toRoute('login.render')
+  }
+
+  /**
+   * Log the authenticated user out
+   */
+  async logout(): Promise<void> {
+    if (this.ctx.auth.user) {
+      const user = this.ctx.auth.user
+      if (user) {
+        await this.ctx.auth.use('web').logout()
+        return this.ctx.response.redirect().toRoute('login.render')
+      }
+      return this.ctx.response.redirect().back()
     }
   }
 }
