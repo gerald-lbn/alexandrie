@@ -12,7 +12,7 @@ test.group('Authentication login', (group) => {
   })
 
   test('fails when form is empty', async ({ client, route }) => {
-    const req = await client.post(route('login.render')).form({})
+    const req = await client.post(route('login.render')).form({}).withCsrfToken()
 
     req.assertRedirectsTo(route('login.render'))
   })
