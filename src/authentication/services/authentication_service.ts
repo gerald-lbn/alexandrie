@@ -122,7 +122,7 @@ export default class AuthenticationService {
     }
   }
 
-  async verify2FA(encodedKey: string, code: string) {
+  async verify2FA(user: User, encodedKey: string, code: string) {
     try {
       const key = decodeBase64(encodedKey)
       if (key.length !== 20) {
@@ -136,6 +136,12 @@ export default class AuthenticationService {
           code: 'Invalid key',
         })
       }
+
+      await user
+        .merge({
+          twoFactorAuthSetup: true,
+        })
+        .save()
 
       return this.ctx.response.redirect().toRoute('home.render')
     } catch {

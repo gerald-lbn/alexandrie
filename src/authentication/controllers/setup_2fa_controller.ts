@@ -11,6 +11,10 @@ export default class Setup2FAController {
     if (!user) {
       return response.redirect().toRoute('login.render')
     }
+    if (user.twoFactorAuthSetup) {
+      return response.redirect().toRoute('home.render')
+    }
+
     const { qrCode, encodedTotp } = this.authenticationService.setup2FA(user)
 
     return inertia.render('auth/setup_2fa', {

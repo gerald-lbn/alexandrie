@@ -25,6 +25,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare isVerified: boolean
 
+  @column()
+  declare twoFactorAuthSetup: boolean
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
@@ -34,5 +37,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @beforeCreate()
   static setValues(user: User) {
     user.isVerified = false
+    user.twoFactorAuthSetup = false
   }
 }
