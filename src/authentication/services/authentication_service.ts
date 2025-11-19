@@ -43,6 +43,9 @@ export default class AuthenticationService {
     const user = await this.userRepository.verifyCredentials(email, password)
     if (user) {
       await this.ctx.auth.use('web').login(user)
+      if (!user.isVerified) {
+        return this.ctx.response.redirect().toRoute('verify-account.render')
+      }
       return this.ctx.response.redirect().toRoute('home.render')
     }
     this.ctx.session.flashErrors({
