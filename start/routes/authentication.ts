@@ -4,8 +4,10 @@ import router from '@adonisjs/core/services/router'
 const LoginController = () => import('#authentication/controllers/login_controller')
 const LogoutController = () => import('#authentication/controllers/logout_controller')
 const RegisterController = () => import('#authentication/controllers/register_controller')
+const Setup2FAController = () => import('#authentication/controllers/setup_2fa_controller')
 const VerifyAccountController = () =>
   import('#authentication/controllers/verify_account_controller')
+const Verify2FAController = () => import('#authentication/controllers/verify_2fa_controller')
 
 router
   .group(() => {
@@ -32,3 +34,11 @@ router
   })
   .use([middleware.auth()])
   .prefix('/verify-account')
+
+router
+  .group(() => {
+    router.get('/setup', [Setup2FAController, 'render']).as('2fa-setup.render')
+    router.post('/verify', [Verify2FAController, 'handle']).as('2fa-verify.handle')
+  })
+  .use([middleware.auth()])
+  .prefix('/2fa')

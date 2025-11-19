@@ -1,8 +1,12 @@
+import User from '#authentication/models/user'
 import OtpRepository from '#authentication/repositories/otp_repository'
 import UserRepository from '#authentication/repositories/user_repository'
 import { inject } from '@adonisjs/core'
 import { HttpContext } from '@adonisjs/core/http'
 import mail from '@adonisjs/mail/services/main'
+import { decodeBase64, encodeBase64 } from '@oslojs/encoding'
+import { createTOTPKeyURI, verifyTOTP } from '@oslojs/otp'
+import { renderSVG } from 'uqr'
 
 @inject()
 export default class AuthenticationService {
@@ -102,5 +106,42 @@ export default class AuthenticationService {
       code: 'Wrong verification code',
     })
     return this.ctx.response.redirect().toRoute('verify-account.render')
+  }
+
+  setup2FA(user: User): { qrCode: string; encodedTotp: string } {
+    const totpKey = new Uint8Array(20)
+    crypto.getRandomValues(totpKey)
+
+    const encodedTotp = encodeBase64(totpKey)
+    const keyURI = createTOTPKeyURI('AdonisJS', user.email, totpKey, 30, 6)
+    const qrCode = renderSVG(keyURI)
+
+    return {
+      qrCode,
+      encodedTotp,
+    }
+  }
+
+  async verify2FA(encodedKey: string, code: string) {
+    try {
+      const key = decodeBase64(encodedKey)
+      if (key.length !== 20) {
+        return this.ctx.session.flashErrors({
+          code: 'Invalid key',
+        })
+      }
+
+      if (!verifyTOTP(key, 30, 6, code)) {
+        return this.ctx.session.flashErrors({
+          code: 'Invalid key',
+        })
+      }
+
+      return this.ctx.response.redirect().toRoute('home.render')
+    } catch {
+      return this.ctx.session.flashErrors({
+        code: 'Invalid key',
+      })
+    }
   }
 }
