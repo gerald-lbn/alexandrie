@@ -68,6 +68,7 @@
     "@adonisjs/static": "^1.1.1",
     "@adonisjs/vite": "^4.0.0",
     "@inertiajs/react": "^2.2.17",
+    "@oslojs/otp": "^1.1.0",
     "@tailwindcss/vite": "^4.1.17",
     "@untitledui/icons": "^0.0.19",
     "@vinejs/vine": "^3.0.1",
