@@ -75,6 +75,7 @@ export default class AuthenticationService {
           isVerified: true,
         })
         .save()
+      await this.ctx.auth.use('web').login(user)
       return this.ctx.response.redirect().toRoute('home.render')
     }
 
