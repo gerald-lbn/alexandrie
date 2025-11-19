@@ -17,7 +17,6 @@ export default class LoginController {
    * Handles the form submission
    */
   async handle({ request }: HttpContext) {
-    console.log(request.all())
     const { code } = request.only(['code'])
     return await this.authenticationService.verifyAccount(code)
   }
