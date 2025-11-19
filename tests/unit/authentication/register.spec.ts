@@ -1,5 +1,8 @@
 import User from '#authentication/models/user'
-import { UserFactoryWithNoPassword } from '#database/factories/user_factory'
+import {
+  UserFactoryWithNoPassword,
+  UserFactoryWithStrongPassword,
+} from '#database/factories/user_factory'
 import hash from '@adonisjs/core/services/hash'
 import { test } from '@japa/runner'
 
@@ -20,5 +23,11 @@ test.group('creating a user', (group) => {
 
     assert.isTrue(hash.isValidHash(user.password))
     assert.isTrue(await hash.verify(user.password, 'password'))
+  })
+
+  test('set the user has unverified', async ({ assert }) => {
+    const user = await UserFactoryWithStrongPassword.create()
+
+    assert.isFalse(user.isVerified)
   })
 })

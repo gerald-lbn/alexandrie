@@ -84,7 +84,7 @@ test.group('Authentication register', (group) => {
   }) => {
     const user = await UserFactoryWithStrongPassword.make()
 
-    await client
+    const req = await client
       .post(route('register.handle'))
       .form({
         fullName: user.fullName,
@@ -98,5 +98,7 @@ test.group('Authentication register', (group) => {
     assert.isNotNull(users[0].id)
     assert.equal(users[0].fullName, user.fullName)
     assert.equal(users[0].email, user.email)
+
+    req.assertRedirectsTo(route('verify-account.render'))
   })
 })

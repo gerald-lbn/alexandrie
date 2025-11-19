@@ -26,11 +26,9 @@ export default class RegisterController {
   /**
    * Handles the form submission
    */
-  async handle({ request, response }: HttpContext) {
+  async handle({ request }: HttpContext) {
     const payload = await request.validateUsing(RegisterController.validation)
 
     await this.registerService.register(payload.fullName, payload.email, payload.password)
-
-    response.redirect().toRoute('home.render')
   }
 }
