@@ -14,10 +14,12 @@ export default class Verify2FAController {
     })
   )
 
-  async handle({ request }: HttpContext) {
-    console.log(request.all())
+  async handle({ auth, request, response }: HttpContext) {
     const { encodedTotp, code } = await request.validateUsing(Verify2FAController.validation)
+    if (!auth.user) {
+      return response.unauthorized()
+    }
 
-    await this.authenticationService.verify2FA(encodedTotp, code)
+    await this.authenticationService.verify2FA(auth.user, encodedTotp, code)
   }
 }
