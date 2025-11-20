@@ -9,8 +9,10 @@
 |
 */
 
-import 'reflect-metadata'
 import { Ignitor, prettyPrintError } from '@adonisjs/core'
+import { Database } from '@adonisjs/lucid/database'
+import { MigrationRunner } from '@adonisjs/lucid/migration'
+import 'reflect-metadata'
 
 /**
  * URL to the application root. AdonisJS need it to resolve
@@ -33,6 +35,18 @@ new Ignitor(APP_ROOT, { importer: IMPORTER })
   .tap((app) => {
     app.booting(async () => {
       await import('#start/env')
+    })
+    app.booted(async () => {
+      const db = await app.container.make(Database)
+
+      const migrator = new MigrationRunner(db, app, {
+        direction: 'up',
+        dryRun: false,
+      })
+      const migrations = await migrator.getList()
+      console.log('migrations: ', migrations)
+      console.log('migrated files:', migrator.migratedFiles)
+      await migrator.run()
     })
     app.listen('SIGTERM', () => app.terminate())
     app.listenIf(app.managedByPm2, 'SIGINT', () => app.terminate())
