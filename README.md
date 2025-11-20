@@ -7,16 +7,49 @@ A playground to experiment with [AdonisJS] framework, authentication and [depend
 - Registration
 - Login
 - Account verification
+- 2FA with TOTP
 
 ## Left to be done
 
-- [ ] Send the OTP code via email
-- [ ] Mark the user as verified
+- [x] Send the OTP code via email
+- [x] Mark the user as verified
 - [ ] Use the `valudUntil` when verify the OTP
 - [ ] Test repositories
-- [ ] Add 2FA with QRCode
+- [x] Add 2FA with QRCode
 
-## Usage
+## Get started
+
+### Docker deployment
+
+Ensure your have [Docker](docs.docker.com/get-docker) and [Docker Compose](docs.docker.com/compose/install) installed.
+
+#### 1. Set up your docker-compose.yml configuration
+
+- Copy `.env.example` as `.env` in the same directory as your `docker-compose.yml`
+- Generate an `APP_KEY` with `openssl` like so `openssl rand -base64 32`
+- Set `DB_HOST` to `database` which will be the name of our database container
+- Set `SMTP_HOST` to `mailer` which will be the name of our email server later
+
+#### 2. Create a `docker-compose.yml` file that references the `.env` variables
+
+```yml
+```
+
+#### 3. Start the containers
+
+```bash
+docker compose up -d
+```
+
+#### 4. Access the app
+
+Once the containers are up and running, access the app in your browser at
+
+```
+http://localhost:
+```
+
+### Development
 
 - Clone the repo
 - Install dependencies with `npm install`
@@ -24,10 +57,11 @@ A playground to experiment with [AdonisJS] framework, authentication and [depend
 - Run the development server with `npm run dev`
 
 Routes:
-- /
-- /login
-- /register
-- /verify-account
+- `/`
+- `/login`: To log into your account
+- `/register` To create an account
+- `/verify-account` To verify your account with an OTP sent via email
+- `/2fa/setup` To setup 2FA with TOTP
 
 ## Tests
 

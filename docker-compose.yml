@@ -1,0 +1,39 @@
+services:
+  app:
+    image: ghcr.io/gerald-lbn/adonisjs-auth:main
+    # build:
+    #  dockerfile: 'Dockerfile'
+    #  context: '.'
+    ports:
+      - 3334:3334
+    environment:
+      - TZ=${TZ}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - APP_KEY=${APP_KEY}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+  database:
+    image: postgres:16-alpine3.19
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+
+  mailer:
+    image: axllent/mailpit
+    ports:
+      - 1025:1025
+      - 8025:8025
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
